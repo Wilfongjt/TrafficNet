@@ -58,46 +58,7 @@ TrafficModel.prototype.addTailSegment = function (car, idxPairNext, nextSeg) {
     }
 
 };
-/*
- TrafficModel.prototype.addTailSegment = function (car, roadIdx, nextSeg) {
- //console.log("ATS nextSeg: " + JSON.stringify(nextSeg));
- //var nextTailSegIdxPair = {
- //  road: car.tail[car.tail.length-1].road, 
- //seg: car.tail[car.tail.length-1].seg + 1
- // };
- 
- //var nextTailSegIdxPair = {
- //  road: roadIdx, 
- //seg: car.tail[car.tail.length-1].seg + 1
- //};
- var nextTailSegIdxPair = {
- road: roadIdx, 
- seg: car.tail[car.tail.length-1].seg + 1
- };
- if (!nextSeg.occupied) {
- // use posted speed
- nextSeg.tailingspeed = car.attitude * nextSeg.speed;
- } else {
- // use occupiers speed adjusted down
- nextSeg.tailingspeed = car.attitude * nextSeg.tailingspeed;
- }
- var lastSegIdxPair = car.tail[car.tail.length - 1];
- //if(nextTailSegIdxPair.road != lastSegIdxPair.road 
- //       || nextTailSegIdxPair.seg != lastSegIdxPair.seg ){
- // update the car tail
- car.tail.push(nextTailSegIdxPair); // push new segment into deque
- //console.log("A addTail: " + JSON.stringify(car));
- if (car.tail.length > 2) { // tail is 2 segments long
- car.tail[0].occupied = false;
- car.tail.shift();// get rid of the oldes seg in deque
- }
- // }else{
- //    console.log("duplicate " + JSON.stringify(nextTailSegIdxPair));
- //}
- //console.log("firstTailSegment: " + JSON.stringify(this.firstTailSegment(car)));
- //console.log("B addTail: " + JSON.stringify(car));
- };
- */
+
 
 TrafficModel.prototype.getRoad = function (car) {
     return this.gisModel.getRoad(car.tail[car.tail.length - 1].road);
