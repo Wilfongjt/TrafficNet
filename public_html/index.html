@@ -31,12 +31,14 @@
                 <h1 class="title">Traffic Net</h1>
                 <nav>
                     <ul>
+                        <li><a class="step" href="#">Step</a></li>
                         <li><a class="start" href="#">Start</a></li>
-                        <li><a class="stop" href="#">Stop</a></li>
+                        <li><a class="state" href="#">Network State</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
+
 
         <div class="main-container">
             <div class="main wrapper clearfix">
@@ -69,7 +71,7 @@
 
                             <li class="done">Automatically generate cars on road network using SVG</li>
                             <li class="done">Initialize road network using SVG</li>
-         
+
                             <li class="done">Build a JSON file to describe a road network (multi-segment roads, one way roads, speed-limit by road, one or more turns, dead ends)</li>
                             <li class="done">Build a self-contained application to model traffic </li>
                         </ul>
@@ -78,13 +80,13 @@
                         <h2>Techniques and Technologies</h2>
                         <ul>
                             <li>Animation (d3.v4.min.js)</li>
-                            
+
                             <li>Drawing (SVG)</li>
-                            
+
                             <li>Geographic Data (JSON)</li>
-                            
+
                             <li><a href="" target="_blank">Java Traffic Model (GITHub)</a></li>
-                            
+
                             <li>Responsive (modernizr-2.8.3-respond-1.4.2.min.js)</li>
 
                         </ul>
@@ -113,7 +115,9 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="js/GIS.js"></script>
+        <script src="js/TrafficModel.js"></script>
         <script src="js/main.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -133,124 +137,24 @@
             ga('create', 'UA-XXXXX-X', 'auto');
             ga('send', 'pageview');
         </script>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
         <script>
-            //var network;
-            //var url = 'http://localhost:3000/network/squareville';
-            var url = 'data/squareville.json';
-            //var svg;
-            d3.json(url, function (error, graph) {
-                //console.log(graph.network);
+            $(function () { // jQuery DOM ready
 
-                var roads = d3.select("body")
-                        .select("#network")
-                        .append("g")
-                        .attr("id", "roads")
-                        .selectAll("line")
-                        .data(graph.network) // set data array
-                        .enter() // 
-                        .selectAll("line")
-                        .data(function (d) {
-                            return d.feature; //<-- this is your array of points
-                        })
-                        .enter()
-                        .append("line")
-                        .attr("x1", function (d) {
-                            //console.log("x0: " + JSON.stringify(d.coordinates[0].x));
-                            return d.coordinates[0].x;
-                        })
-                        .attr("y1", function (d) {
-                            //console.log("y0: " + JSON.stringify(d.coordinates[0].y));
-                            return d.coordinates[0].y;
-                        })
-                        .attr("x2", function (d) {
-                            //console.log("x1: " + JSON.stringify(d.coordinates[1].x));
-                            return d.coordinates[1].x;
-                        })
-                        .attr("y2", function (d) {
-                            //console.log("y1: " + JSON.stringify(d.coordinates[1].y));
-                            return d.coordinates[1].y;
-                        })
-                        .attr("stroke-width", function (d) {
-                            if (d.idx == 0) {
-                                return 1.5;
-                            }
-                            return 0.5;
-                        })
-                        .attr("stroke", function (d) {
-                            if (d.idx == 0) {
-                                return "darkgrey";
-                            }
-                            return "lightgrey";
-                        })
-                        ;
+                $('.step').click(function () { // click event for <a class="test">
+                    update();
+                    draw();
+                });
+                $('.start').click(function () { // click event for <a class="test">
+                    alert("start not implemented");
 
-                var cars = d3.select("body")
-                        .select("#network")
-                        .append("g") // add group for cars
-                        .attr("id", "cars")
-                        .selectAll("circle") // prepare to add circles
-                        .data(graph.network) // set data array
-                        .enter() // 
-                        .append("circle")
-                        .attr("cx", function (d) {
-                            return d.feature[0].coordinates[0].x;
-                        })
-                        .attr("cy", function (d) {
-                            return d.feature[0].coordinates[0].y;
-                        })
-                        .attr("r", 5)
-                        .attr("fill", "blue");
-                ;
-
-                // Legend
-                d3.select("#key")
-                        .append("circle")
-                        .attr("cx", 15)
-                        .attr("cy", 20)
-                        .attr("r", 5)
-                        .attr("fill", "blue")
-                d3.select("#key")
-                        .append("text")
-                        .style("fill", "black")
-                        .attr("x", 44)
-                        .attr("y", 24)
-                        .text("Car");
-                d3.select("#key")
-                        .append("line")
-                        .attr("x1", 10)
-                        .attr("y1", 40)
-                        .attr("x2", 40)
-                        .attr("y2", 40)
-                        .attr("stroke-width", 2)
-                        .attr("stroke", "darkgray");
-                d3.select("#key")
-                        .append("text")
-                        .style("fill", "black")
-                        .attr("x", 45)
-                        .attr("y", 44)
-                        .text("Road begining");
-
-                d3.select("#key")
-                        .append("line")
-                        .attr("x1", 10)
-                        .attr("y1", 60)
-                        .attr("x2", 40)
-                        .attr("y2", 60)
-                        .attr("stroke-width", 0.5)
-                        .attr("stroke", "darkgray")
-                        ;
-
-                d3.select("#key")
-                        .append("text")
-                        .style("fill", "black")
-                        .attr("x", 45)
-                        .attr("y", 64)
-                        .text("Road end");
-                ;
-
+                });
+                $('.state').click(function () { // click event for <a class="test">
+                    console.log("----- Network State");
+                    state();
+                    console.log("--------------------")
+                });
             });
-
         </script>
+
     </body>
 </html>
