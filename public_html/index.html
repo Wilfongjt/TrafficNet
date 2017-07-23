@@ -31,12 +31,14 @@
                 <h1 class="title">Traffic Net</h1>
                 <nav>
                     <ul>
+                        <li><a class="step" href="#">Step</a></li>
                         <li><a class="start" href="#">Start</a></li>
-                        <li><a class="stop" href="#">Stop</a></li>
+                        <li><a class="state" href="#">Network State</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
+
 
         <div class="main-container">
             <div class="main wrapper clearfix">
@@ -114,6 +116,8 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
         <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="js/GIS.js"></script>
+        <script src="js/TrafficModel.js"></script>
         <script src="js/main.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -133,7 +137,24 @@
             ga('create', 'UA-XXXXX-X', 'auto');
             ga('send', 'pageview');
         </script>
+        <script>
+            $(function () { // jQuery DOM ready
 
+                $('.step').click(function () { // click event for <a class="test">
+                    update();
+                    draw();
+                });
+                $('.start').click(function () { // click event for <a class="test">
+                    alert("start not implemented");
+
+                });
+                $('.state').click(function () { // click event for <a class="test">
+                    console.log("----- Network State");
+                    state();
+                    console.log("--------------------")
+                });
+            });
+        </script>
 
     </body>
 </html>
