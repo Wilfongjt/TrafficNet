@@ -125,9 +125,6 @@ d3.json(url, function (error, graph) {
             .attr("y", 64)
             .text("Road end");
     ;
-    //update();
-    //draw();
-
 });
 
 function update() {
@@ -180,18 +177,18 @@ function updateCars() {
         //switch (getUpdateStatus(network[car.tail[0].road], roadSegment, newCoord)) {
         switch (trafficmodel.getState(car, nextCoord)) {
             case 0: // full stop in place
-                console.log("0 full stop ");
+                //console.log("0 full stop ");
                 //setColour(Color.RED);   // Dead in the Road RED
                 break;
             case 1: // update location on current segment
-                console.log("1 update location on current segment");
+                //console.log("1 update location on current segment");
                 //setColour(Color.GRAY); // steady as you go GRAY
                 //this.get(0).assign(nextCoord);
                 car.coordinates[0].x = nextCoord.x;
                 car.coordinates[0].y = nextCoord.y;
                 break;
             case 2: // inner road segment with overshoot aka next segment
-                console.log("2 inner road segment with overshoot aka next segment");
+                //console.log("2 inner road segment with overshoot aka next segment");
                 // deque
                 // var queue = [];
                 // queue.push(2);         // queue is now [2]
@@ -225,7 +222,7 @@ function updateCars() {
                 console.log("3 extra road, extra segment but still has more segments");
                 break;
             case 4: // extra road segement overshoot 
-                console.log("4 extra road segement overshoot");
+                //console.log("4 extra road segement overshoot");
 
                 //console.log("UC car: " + JSON.stringify(cars[i]));
 
