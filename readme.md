@@ -10,7 +10,7 @@ Traffic Net is a traffic simulation. Cars drive around the network making random
 * Port traffic model from Java
 ## Completed Features
 
-* frame step button
+* A frame step button for observation and debug
 * Automatically generate cars on road network using SVG
 * Initialize road network using SVG
 * Build a JSON file to describe a road network (multi-segment roads, one way roads, speed-limit by road, one or more turns, dead ends)
