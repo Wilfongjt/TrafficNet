@@ -32,8 +32,8 @@
                 <nav>
                     <ul>
                         <li><a class="step" href="#">Step</a></li>
-                        <li><a class="start" href="#">Start</a></li>
-                        <li><a class="state" href="#">Network State</a></li>
+
+                        <li><a class="state" href="#">State</a></li>
                     </ul>
                 </nav>
             </header>
@@ -51,7 +51,12 @@
                     <section>
                         <h2>The Road Network</h2>
 
-
+                        <nav  class="wrapper clearfix">
+                            <ul>
+                                <li><a class="start" href="#">Start</a></li>
+                                <li><a class="stop" href="#">Stop</a></li>
+                            </ul>
+                        </nav>
                         <!-- *************************************** -->
                         <svg id="network" width="700" height="620">
 
@@ -62,13 +67,25 @@
                         <p></p>
                         <h3>Upcoming Features</h3>
                         <ul> 
-                            <li>Animate the cars to refect model changes</li>
+
                             <li>Create real world road network</li>
-                            <li>Port traffic model from Java </li>
+                            <li>Create bus routes</li>
+                            
                         </ul>
                         <h3>Completed Features</h3>
-                        <ul> 
+                        <ul>
+                            <li class="done">Update Map Key with fire engine</li>
+                            <li class="done">Stopping car  when fire engine approaches from behind</li>
+                            <li class="done">Fire Engine </li>
+                            <li class="done">Tailgating</li>
+                            <li class="done">Random turns at intersections</li>
+                            <li class="done">Write network state to console.log (state button)</li>
 
+                            <li class="done">Step a single frame at a time (step button)</li>
+                            <li class="done">Animate the cars to refect traffic changes over time</li>
+
+                            <li class="done">Start and stop model (start and stop buttons)</li>
+                            <li class="done">Port traffic model from Java</li>
                             <li class="done">Automatically generate cars on road network using SVG</li>
                             <li class="done">Initialize road network using SVG</li>
 
@@ -80,6 +97,8 @@
                         <h2>Techniques and Technologies</h2>
                         <ul>
                             <li>Animation (d3.v4.min.js)</li>
+
+                            <li>Game Loop Animation</li>
 
                             <li>Drawing (SVG)</li>
 
@@ -102,6 +121,7 @@
                     <svg id="key">
 
                     </svg>
+
                 </aside>
 
             </div> <!-- #main -->
@@ -138,14 +158,24 @@
             ga('send', 'pageview');
         </script>
         <script>
+            var pleaseStopIamBored = false;
             $(function () { // jQuery DOM ready
 
                 $('.step').click(function () { // click event for <a class="test">
+                    pleaseStopIamBored = false;
                     update();
                     draw();
                 });
                 $('.start').click(function () { // click event for <a class="test">
-                    alert("start not implemented");
+                    //alert("start not implemented");
+                    pleaseStopIamBored = false;
+                    requestAnimationFrame(mainLoop);
+
+                });
+                $('.stop').click(function () { // click event for <a class="test">
+                    //alert("start not implemented");
+
+                    pleaseStopIamBored = true;
 
                 });
                 $('.state').click(function () { // click event for <a class="test">
@@ -154,6 +184,17 @@
                     console.log("--------------------")
                 });
             });
+        </script>
+        <script>
+            function mainLoop() {
+                // console.log("loop");
+                if (pleaseStopIamBored) {
+                    return;
+                }
+                update();
+                draw();
+                requestAnimationFrame(mainLoop);
+            }
         </script>
 
     </body>
