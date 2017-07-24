@@ -1,28 +1,37 @@
 function TrafficModel(gis) {
     this.gisModel = gis;
+
+    this.normal = 1;
+    this.fireEngine = 2;
 }
 ;
 TrafficModel.prototype.getRandomInt = function (min, max) { //Returns a random number between min (inclusive) and max (exclusive)
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-TrafficModel.prototype.getDVX = function (roadSegment) {
+TrafficModel.prototype.getDVX = function (car, roadSegment) {
+    if (roadSegment.state.supressTraffic
+            && car.type != this.fireEngine ) {
+        return 0.0;
+    }
     var dy = roadSegment.coordinates[1].y - roadSegment.coordinates[0].y;
     var dx = roadSegment.coordinates[1].x - roadSegment.coordinates[0].x;
-    
     //var vx = roadSegment.speed * (dx / (Math.abs(dx) + Math.abs(dy)));
-       var vx = roadSegment.tailingspeed * (dx / (Math.abs(dx) + Math.abs(dy)));
-  
+    var vx = roadSegment.tailingspeed * (dx / (Math.abs(dx) + Math.abs(dy)));
+
     return vx;
 };
 
-TrafficModel.prototype.getDVY = function (roadSegment) {
+TrafficModel.prototype.getDVY = function (car,roadSegment) {
+    if (roadSegment.state.supressTraffic
+            &&  car.type != this.fireEngine ) {
+        return 0.0;
+    }
     var dy = roadSegment.coordinates[1].y - roadSegment.coordinates[0].y;
     var dx = roadSegment.coordinates[1].x - roadSegment.coordinates[0].x;
     //var vy = roadSegment.speed * (dy / (Math.abs(dx) + Math.abs(dy)));
-    
     var vy = roadSegment.tailingspeed * (dy / (Math.abs(dx) + Math.abs(dy)));
-    
+
     return vy;
 };
 
@@ -30,33 +39,72 @@ TrafficModel.prototype.getDVY = function (roadSegment) {
 TrafficModel.prototype.addTailSegment = function (car, idxPairNext, nextSeg) {
 //console.log("ATS nextSeg: " + JSON.stringify(nextSeg));
 
+    var tailEnd = 0;// end is at zero... really
     var nextTailSegIdxPair = {
         road: idxPairNext.road,
         seg: idxPairNext.seg
     };
-    if (!nextSeg.occupied) {
-        nextSeg.occupied = true;
-        // use posted speed
-        nextSeg.tailingspeed = car.attitude * nextSeg.speed;
-    } else {
-        // use occupiers speed adjusted down
-        nextSeg.tailingspeed = car.attitude * nextSeg.tailingspeed;
+
+    switch (car.type) {
+        case this.normal:// car
+            if (!(nextSeg.state.occupied > -1)) { // not occupied
+                nextSeg.state.occupied = car.idx;
+                // use posted speed
+                nextSeg.tailingspeed = car.attitude * nextSeg.speed;
+            }
+            break;
+        case this.fireEngine:
+            if (!(nextSeg.state.occupied > -1)) { // not occupied
+                nextSeg.state.occupied = car.idx;
+
+                // use posted speed
+                nextSeg.tailingspeed = car.attitude * nextSeg.speed;
+            }
+            nextSeg.state.supressTraffic = true;// cars may follow
+            // supress traffic in front of engine
+            // supress current segment 
+            // supress one segment ahead
+            var nextSegPlusOne
+                    = this.gisModel
+                    .getSegment({road: idxPairNext.road, seg: idxPairNext.seg + 1});// look ahead one
+            if (nextSegPlusOne) {
+                //console.log("supress traffic");
+                nextSegPlusOne.state.supressTraffic = true;
+            }
+            //console.log("nextSegPlusOne: " + JSON.stringify(nextSegPlusOne));
+
+            break;
     }
+
+    /*
+     if (!(nextSeg.state.occupied > -1)) {
+     //nextSeg.occupied = true;
+     nextSeg.state.occupied = car.idx;
+     // use posted speed
+     nextSeg.tailingspeed = car.attitude * nextSeg.speed;
+     } else {
+     // use occupiers speed adjusted down
+     //nextSeg.tailingspeed = car.attitude * nextSeg.tailingspeed;
+     }
+     */
     //console.log("nextSeg: " + JSON.stringify("nextSeg"));
     // var lastSegIdxPair = car.tail[car.tail.length - 1];
     // update the car tail
     car.tail.push(nextTailSegIdxPair); // push new segment into deque
     //console.log("A addTail: " + JSON.stringify(car));
+
     if (car.tail.length > 2) { // tail is 2 segments long
         //console.log("set occupied false");
-        
-        var seg = gisModel.getSegment(car.tail[0]);
-        seg.occupied = false;
+
+        var seg = gisModel.getSegment(car.tail[tailEnd]);
+        seg.state.occupied = -1;
+        seg.state.supressTraffic = false;
+        //seg.occupied = false;
         //car.tail[0].occupied = false;
         //console.log("seg: " + JSON.stringify(seg));
         car.tail.shift();// get rid of the oldest seg in deque
-    }
 
+    }
 };
 
 
@@ -102,7 +150,7 @@ TrafficModel.prototype.getNextRoadDecision = function (car) {
     //console.log("NRD nextIdx: " + nextIdx);
     // console.log("this.links: " + this.gisModel.links);
     var link = this.gisModel.links[nextIdx]; // next link
-   // console.log("NRD link: " + JSON.stringify(link))
+    // console.log("NRD link: " + JSON.stringify(link))
     if (link.next > -1) {
         //console.log("NRD link.next: " + link.next)
         //nextRoad = this.network[link.next];
@@ -118,15 +166,10 @@ TrafficModel.prototype.getState = function (car, nextCoord) {
     // still in the same segment
     // segment or road has changed
     // full stop
-//xxxxxx
     var currRoad = this.getRoad(car);
     //var firstSegment = this.gisModel.getSegment(car.tail[0]);//network[car.tail[0].road].feature[car.tail[0].seg];
     var firstSegment = this.firstTailSegment(car);
     // velocity
-    /*var nextCoord = {x: car.coordinates[0].x, y: car.coordinates[0].y};
-     nextCoord.x += this.gisModel.getDVX(firstSegment);
-     nextCoord.y += this.gisModel.getDVY(firstSegment);
-     */
     var inCurrentRoad = this.gisModel.isInMBR(currRoad.mbr, nextCoord);//this.getCurrentRoad().getMBR().contains(nextCoord);
     var inCurrentSegment = this.gisModel.isInMBR(this.gisModel.getMBR(firstSegment), nextCoord);//getTail().getFirst().contains(nextCoord);
 
