@@ -10,7 +10,16 @@ Traffic Net is a traffic simulation. Cars drive around the network making random
 * Port traffic model from Java
 ## Completed Features
 
-* A frame step button for observation and debug
+* Update Map Key with fire engine
+* Stopping car when fire engine approaches from behind
+* Fire Engine
+* Tailgating
+* Random turns at intersections
+* Write network state to console.log (state button)
+* Step a single frame at a time (step button)
+* Animate the cars to refect traffic changes over time
+* Start and stop model (start and stop buttons)
+* Port traffic model from Java
 * Automatically generate cars on road network using SVG
 * Initialize road network using SVG
 * Build a JSON file to describe a road network (multi-segment roads, one way roads, speed-limit by road, one or more turns, dead ends)
