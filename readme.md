@@ -7,7 +7,7 @@ Traffic Net is a traffic simulation. Cars drive around the network making random
 
 * Animate the cars to refect model changes
 * Create real world road network
-* Port traffic model from Java
+
 ## Completed Features
 
 * Update Map Key with fire engine
@@ -27,6 +27,7 @@ Traffic Net is a traffic simulation. Cars drive around the network making random
 ## Techniques and Technologies
 
 * Animation (d3.v4.min.js)
+* Game Loop Animation
 * Drawing (SVG)
 * Geographic Data (JSON)
 * Java Traffic Model (GITHub)
