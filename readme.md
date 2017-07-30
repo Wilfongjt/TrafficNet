@@ -27,10 +27,6 @@ Traffic Net is a traffic simulation. Cars drive around the network making random
 * Initialize road network using SVG
 * Build a JSON file to describe a road network (multi-segment roads, one way roads, speed-limit by road, one or more turns, dead ends)
 * Build a self-contained application to model traffic
-## Issues
-* Page hicups when start button is pressed</li>
-* Traffic network color is too light
-* Traffic network is too big for phone
 
 ## Techniques and Technologies
 
