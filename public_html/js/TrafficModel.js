@@ -11,8 +11,8 @@ TrafficModel.prototype.getRandomInt = function (min, max) { //Returns a random n
 
 TrafficModel.prototype.getDVX = function (car, roadSegment) {
     if (roadSegment.state.supressTraffic
-            && car.type != this.fireEngine ) {
-        return 0.0;
+            && car.type != this.fireEngine) {
+        return 0.0;  // add nothing
     }
     var dy = roadSegment.coordinates[1].y - roadSegment.coordinates[0].y;
     var dx = roadSegment.coordinates[1].x - roadSegment.coordinates[0].x;
@@ -22,10 +22,10 @@ TrafficModel.prototype.getDVX = function (car, roadSegment) {
     return vx;
 };
 
-TrafficModel.prototype.getDVY = function (car,roadSegment) {
+TrafficModel.prototype.getDVY = function (car, roadSegment) {
     if (roadSegment.state.supressTraffic
-            &&  car.type != this.fireEngine ) {
-        return 0.0;
+            && car.type != this.fireEngine) {
+        return 0.0; // add nothing
     }
     var dy = roadSegment.coordinates[1].y - roadSegment.coordinates[0].y;
     var dx = roadSegment.coordinates[1].x - roadSegment.coordinates[0].x;
@@ -33,6 +33,17 @@ TrafficModel.prototype.getDVY = function (car,roadSegment) {
     var vy = roadSegment.tailingspeed * (dy / (Math.abs(dx) + Math.abs(dy)));
 
     return vy;
+};
+TrafficModel.prototype.getPullOverCoordinate = function (car) {
+    //console.log("car: " + JSON.stringify(car));
+    var tailSeg = this.firstTailSegment(car);
+    //console.log("tailSeg: " + JSON.stringify(tailSeg));
+    var coordA = tailSeg.coordinates[0];
+    //console.log("coordA: " + JSON.stringify(coordA));
+    var coordB = car.coordinates[0];
+    //console.log("coordB: " + JSON.stringify(coordB));
+    var distance = 7.0;
+    return this.gisModel.getPerpPoint(coordA, coordB, distance);
 };
 
 
@@ -47,14 +58,16 @@ TrafficModel.prototype.addTailSegment = function (car, idxPairNext, nextSeg) {
 
     switch (car.type) {
         case this.normal:// car
-            if (!(nextSeg.state.occupied > -1)) { // not occupied
+            //   if (!(nextSeg.state.occupied > -1)) { 
+            if (nextSeg.state.occupied < 0) {// not occupied
                 nextSeg.state.occupied = car.idx;
                 // use posted speed
                 nextSeg.tailingspeed = car.attitude * nextSeg.speed;
             }
             break;
         case this.fireEngine:
-            if (!(nextSeg.state.occupied > -1)) { // not occupied
+            //if (!(nextSeg.state.occupied > -1)   ) { 
+            if (nextSeg.state.occupied < 0) {// not occupied
                 nextSeg.state.occupied = car.idx;
 
                 // use posted speed
@@ -169,7 +182,7 @@ TrafficModel.prototype.getState = function (car, nextCoord) {
     var currRoad = this.getRoad(car);
     //var firstSegment = this.gisModel.getSegment(car.tail[0]);//network[car.tail[0].road].feature[car.tail[0].seg];
     var firstSegment = this.firstTailSegment(car);
-    // velocity
+    // 
     var inCurrentRoad = this.gisModel.isInMBR(currRoad.mbr, nextCoord);//this.getCurrentRoad().getMBR().contains(nextCoord);
     var inCurrentSegment = this.gisModel.isInMBR(this.gisModel.getMBR(firstSegment), nextCoord);//getTail().getFirst().contains(nextCoord);
 
