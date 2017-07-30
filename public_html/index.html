@@ -53,10 +53,11 @@
 
                         <nav  class="wrapper clearfix">
                             <ul>
-                                <li><a class="start" href="#">Start</a></li>
-                                <li><a class="stop" href="#">Stop</a></li>
+                                <li><a class="start" href="#!">Start</a></li>
+                                <li><a class="stop" href="#!">Stop</a></li>
                             </ul>
                         </nav>
+                       
                         <!-- *************************************** -->
                         <svg id="network" width="700" height="620">
 
@@ -97,9 +98,10 @@
                         <h3>Issues</h3>
                         <ul> 
 
-                            <li>Page hicups when start button is pressed</li>
+                           
                             <li>Traffic network color is too light</li>
                             <li>Traffic network is too big for phone</li>
+                             <li class="done">Page hicups when start button is pressed... change href="#" to href="#!"... a link to nothing</li>
 
                         </ul>
                     </section>
@@ -117,7 +119,7 @@
                             <li><a href="" target="_blank">Java Traffic Model (GITHub)</a></li>
 
                             <li>Responsive (modernizr-2.8.3-respond-1.4.2.min.js)</li>
-                            
+
                             <li>Google Cloud</li>
                         </ul>
                     </section>
@@ -197,8 +199,11 @@
             });
         </script>
         <script>
+            initiateNetwork();
+            drawLegend();
+            //drawNetwork();
             function mainLoop() {
-                // console.log("loop");
+
                 if (pleaseStopIamBored) {
                     return;
                 }
