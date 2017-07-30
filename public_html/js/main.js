@@ -116,6 +116,7 @@ function drawLegend() {
     var sx2 = 44;
     var sy = 20
     var to = 5;
+    //var leftX= 0;
     d3.select("#key")
             .append("circle")
             .attr("cx", sx)
@@ -146,32 +147,32 @@ function drawLegend() {
       d3.select("#key")
             .append("text")
             .style("fill", "black")
-            .attr("x", sx2)
-            .attr("y", (sy * 3) + to)
+            .attr("x", 0)
+            .attr("y", (sy * 4) + to)
             .text("All Roads are one-way");
     
-    d3.select("#key")
-            .append("line")
-            .attr("x1", 0)
-            .attr("y1", (sy * 4))
-            .attr("x2", 40)
-            .attr("y2", (sy * 4))
-            .attr("stroke-width", getRoadWidth())
-            .attr("stroke", getRoadColor(0));
-    d3.select("#key")
-            .append("text")
-            .style("fill", "black")
-            .attr("x", sx2)
-            .attr("y", (sy * 4) + to)
-            .text("Road begining");
-    //////////
-
     d3.select("#key")
             .append("line")
             .attr("x1", 0)
             .attr("y1", (sy * 5))
             .attr("x2", 40)
             .attr("y2", (sy * 5))
+            .attr("stroke-width", getRoadWidth())
+            .attr("stroke", getRoadColor(0));
+    d3.select("#key")
+            .append("text")
+            .style("fill", "black")
+            .attr("x", sx2)
+            .attr("y", (sy * 5) + to)
+            .text("Road begining");
+    //////////
+
+    d3.select("#key")
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", (sy * 6))
+            .attr("x2", 40)
+            .attr("y2", (sy * 6))
             .attr("stroke-width", getRoadWidth())
             .attr("stroke", getRoadColor(1))
             ;
@@ -180,9 +181,9 @@ function drawLegend() {
             .append("text")
             .style("fill", "black")
             .attr("x", sx2)
-            .attr("y", (sy * 5) + to)
+            .attr("y", (sy * 6) + to)
             .text("Road end");
-    ;
+    
 
 }
 
